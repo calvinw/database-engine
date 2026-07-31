@@ -35,8 +35,8 @@ checkPaths:
   - scripts/docpact-gate.sh
   - scripts/install-git-hooks.sh
 lastReviewedAt: 2026-07-31
-lastReviewedCommit: bb97b3d1064656f6d519d07e1b4efeb3bc8df026
-lastReviewedNote: "Reviewed for Issue #324 Flow derivative fence narrowing: database ownership, migration source-of-truth, dev-first delivery, and workspace integration remain unchanged."
+lastReviewedCommit: 55ddadc0c329afa3d788edbcbc6f1c4c6956dae8
+lastReviewedNote: "Reviewed for Issue #327 FlowProperty and UnitGroup derivative fence narrowing: database ownership, migration source-of-truth, dev-first delivery, and workspace integration remain unchanged."
 related:
   - .docpact/config.yaml
   - docs/agents/repo-validation.md

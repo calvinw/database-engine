@@ -28,8 +28,8 @@ checkPaths:
   - scripts/docpact-gate.sh
   - scripts/install-git-hooks.sh
 lastReviewedAt: 2026-07-31
-lastReviewedCommit: bb97b3d1064656f6d519d07e1b4efeb3bc8df026
-lastReviewedNote: "Reviewed for Issue #324 Flow derivative fence narrowing: the migration stays within the existing guarded identity/derivative hotspot and does not change repo ownership, source-of-truth, or branch architecture."
+lastReviewedCommit: 55ddadc0c329afa3d788edbcbc6f1c4c6956dae8
+lastReviewedNote: "Reviewed for Issue #327 FlowProperty and UnitGroup derivative fence narrowing: the migration stays within the existing guarded identity/derivative hotspot and does not change repo ownership, source-of-truth, or branch architecture."
 related:
   - ../../AGENTS.md
   - ../../.docpact/config.yaml
