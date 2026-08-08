@@ -35,8 +35,8 @@ checkPaths:
   - scripts/docpact-gate.sh
   - scripts/install-git-hooks.sh
 lastReviewedAt: 2026-08-08
-lastReviewedCommit: 6ffdc9abd6bbf939fbb2fdae9a82aa839b0d9912
-lastReviewedNote: "Reviewed for Issue #422: persistent Dev delivery runs the database migration and verification here, then deploys and validates Functions through the Edge repository."
+lastReviewedCommit: 57f39f832d94933cfab9b78334b813cf1a6aa239
+lastReviewedNote: "Reviewed for Team Logo Storage: the private sys-files bucket, internal authorization helpers, Storage RLS, and focused proof remain database-engine-owned schema truth."
 related:
   - .docpact/config.yaml
   - docs/agents/repo-validation.md

@@ -28,8 +28,8 @@ checkPaths:
   - scripts/docpact-gate.sh
   - scripts/install-git-hooks.sh
 lastReviewedAt: 2026-08-08
-lastReviewedCommit: 6ffdc9abd6bbf939fbb2fdae9a82aa839b0d9912
-lastReviewedNote: "Reviewed for Issue #422: persistent Dev keeps database migration deployment here and Function deployment in the Edge repository."
+lastReviewedCommit: 57f39f832d94933cfab9b78334b813cf1a6aa239
+lastReviewedNote: "Reviewed for Team Logo Storage: sys-files bucket configuration and object-policy truth live in migrations, with authorization helpers kept outside exposed Data API schemas."
 related:
   - ../../AGENTS.md
   - ../../.docpact/config.yaml
@@ -61,8 +61,17 @@ explicitly: `public` for entity tables and `api` for RPCs. This avoids relying
 on local CLI normalization, which may place a custom schema before `public`.
 `private`, `util`, and `archive` are not exposed. `authenticated` has only the
 `private.roles` and `private.reviews` reads needed to evaluate the preserved
-public core-table RLS policies; browser roles receive no other internal
-relation, routine, or write capability.
+public core-table RLS policies plus the two narrowly scoped Storage-policy
+helpers described below; browser roles receive no other internal relation,
+routine, or write capability.
+
+Supabase Storage bucket configuration and `storage.objects` RLS are also
+database-owned schema truth. The private `sys-files` bucket serves authenticated
+Team logos under `logo/` and the Welcome guide video under `video/`. Team Logo
+write authorization is derived from `auth.uid()` by security-definer helpers in
+the non-exposed `private` schema. The helpers receive only the `EXECUTE` grant
+needed for Storage policy evaluation; they are not RPCs and must remain absent
+from the exposed `public` and `api` schemas.
 
 Every external `EXECUTE` grant on an `api` routine is an exact-signature entry
 in `private.api_capability_grants`. That table records the owning capability ID
