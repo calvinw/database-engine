@@ -21,42 +21,42 @@ set
   file_size_limit = excluded.file_size_limit,
   allowed_mime_types = excluded.allowed_mime_types;
 
-create or replace function private.storage_can_upload_team_logo()
+create or replace function public.storage_can_upload_team_logo()
 returns boolean
 language sql
 stable
 security definer
-set search_path = ''
+set search_path = public, pg_temp
 as $function$
   select
     auth.uid() is not null
     and (
       exists (
         select 1
-        from private.roles as membership
-        where membership.user_id = auth.uid()
+        from public.roles as membership
+        where membership.user_id = (select auth.uid())
           and membership.team_id <> '00000000-0000-0000-0000-000000000000'::uuid
           and membership.role in ('owner', 'admin')
       )
       or exists (
         select 1
-        from private.roles as membership
-        where membership.user_id = auth.uid()
+        from public.roles as membership
+        where membership.user_id = (select auth.uid())
           and membership.team_id = '00000000-0000-0000-0000-000000000000'::uuid
           and membership.role in ('owner', 'admin')
       )
       or (
         not exists (
           select 1
-          from private.roles as membership
-          where membership.user_id = auth.uid()
+          from public.roles as membership
+          where membership.user_id = (select auth.uid())
             and membership.team_id <> '00000000-0000-0000-0000-000000000000'::uuid
             and membership.role <> 'rejected'
         )
         and not exists (
           select 1
-          from private.roles as membership
-          where membership.user_id = auth.uid()
+          from public.roles as membership
+          where membership.user_id = (select auth.uid())
             and membership.team_id = '00000000-0000-0000-0000-000000000000'::uuid
             and membership.role in ('owner', 'admin', 'member')
         )
@@ -64,18 +64,18 @@ as $function$
     )
 $function$;
 
-create or replace function private.storage_can_delete_team_logo(p_object_name text)
+create or replace function public.storage_can_delete_team_logo(p_object_name text)
 returns boolean
 language sql
 stable
 security definer
-set search_path = ''
+set search_path = public, pg_temp
 as $function$
   select
     auth.uid() is not null
     and exists (
       select 1
-      from private.teams as team
+      from public.teams as team
       where (
           team.json ->> 'lightLogo' = '../sys-files/' || p_object_name
           or team.json ->> 'darkLogo' = '../sys-files/' || p_object_name
@@ -83,15 +83,15 @@ as $function$
         and (
           exists (
             select 1
-            from private.roles as membership
-            where membership.user_id = auth.uid()
+            from public.roles as membership
+            where membership.user_id = (select auth.uid())
               and membership.team_id = team.id
               and membership.role in ('owner', 'admin')
           )
           or exists (
             select 1
-            from private.roles as system_membership
-            where system_membership.user_id = auth.uid()
+            from public.roles as system_membership
+            where system_membership.user_id = (select auth.uid())
               and system_membership.team_id = '00000000-0000-0000-0000-000000000000'::uuid
               and system_membership.role in ('owner', 'admin')
           )
@@ -99,12 +99,12 @@ as $function$
     )
 $function$;
 
-revoke all on function private.storage_can_upload_team_logo()
+revoke all on function public.storage_can_upload_team_logo()
   from public, anon, authenticated, service_role;
-revoke all on function private.storage_can_delete_team_logo(text)
+revoke all on function public.storage_can_delete_team_logo(text)
   from public, anon, authenticated, service_role;
-grant execute on function private.storage_can_upload_team_logo() to authenticated;
-grant execute on function private.storage_can_delete_team_logo(text) to authenticated;
+grant execute on function public.storage_can_upload_team_logo() to authenticated;
+grant execute on function public.storage_can_delete_team_logo(text) to authenticated;
 
 drop policy if exists "sys_files_team_assets_read" on storage.objects;
 create policy "sys_files_team_assets_read"
@@ -125,7 +125,7 @@ with check (
   bucket_id = 'sys-files'
   and (storage.foldername(name))[1] = 'logo'
   and lower(storage.extension(name)) in ('jpeg', 'jpg', 'png', 'gif', 'bmp', 'webp', 'svg')
-  and private.storage_can_upload_team_logo()
+  and public.storage_can_upload_team_logo()
 );
 
 drop policy if exists "sys_files_team_logos_delete" on storage.objects;
@@ -137,8 +137,8 @@ using (
   bucket_id = 'sys-files'
   and (storage.foldername(name))[1] = 'logo'
   and (
-    owner_id = auth.uid()::text
-    or private.storage_can_delete_team_logo(name)
+    owner_id = (select auth.uid()::text)
+    or public.storage_can_delete_team_logo(name)
   )
 );
 
