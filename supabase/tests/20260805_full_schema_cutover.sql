@@ -80,8 +80,8 @@ select is(
     where namespace.nspname = 'private'
       and routine.prokind = 'f'
   ),
-  202::bigint,
-  'private contains existing helpers plus all reviewed internal functions'
+  204::bigint,
+  'private contains existing helpers plus all reviewed internal and Storage-policy functions'
 );
 
 select ok(
@@ -121,8 +121,8 @@ select is(
     select count(*)
     from pg_policy
   ),
-  61::bigint,
-  'all RLS policies remain present'
+  64::bigint,
+  'all application and Team Logo Storage RLS policies remain present'
 );
 
 select is(

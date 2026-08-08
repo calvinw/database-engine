@@ -1,8 +1,8 @@
 version: 1
 layout: repo
 lastReviewedAt: "2026-08-08"
-lastReviewedCommit: "6ffdc9abd6bbf939fbb2fdae9a82aa839b0d9912"
-lastReviewedNote: "Reviewed for Issue #422: persistent Dev deploys and verifies database migrations here, then deploys and validates Functions through the Edge repository."
+lastReviewedCommit: "57f39f832d94933cfab9b78334b813cf1a6aa239"
+lastReviewedNote: "Reviewed for Team Logo Storage: bucket configuration, private authorization helpers, Storage RLS, and focused database proof remain owned here."
 
 # Keep deterministic governance facts here.
 # AGENTS.md remains the repo contract entrypoint.
